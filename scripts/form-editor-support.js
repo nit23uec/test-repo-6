@@ -207,10 +207,13 @@ async function renderFormBlock(form, editMode) {
 }
 
 async function annotateFormsForEditing(forms) {
+  console.log(`window.currentMode: ${window.currentMode}`);
   if (typeof window.currentMode !== 'undefined' && window.currentMode === 'preview') return;
   forms.forEach(async (form) => {
+    console.log('annotating forms: renderFormBlock');
     const { formEl, formDef } = (await renderFormBlock(form, true)) || {};
     if (formEl && formDef) {
+      console.log('annotating form: just before annotating', formEl);
       annotateFormForEditing(formEl, formDef);
     }
   });
