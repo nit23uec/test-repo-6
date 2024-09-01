@@ -328,12 +328,21 @@ function attachEventListners(main) {
     });
   });
 
-  document.body.addEventListener('aue:ui-edit', () => {
-    console.log('ui-edit event fired');
+  const ueEditModeHandler = () => {
     window.currentMode = 'edit';
     const forms = document.querySelectorAll('form');
     annotateFormsForEditing(forms);
-  });
+  }
+
+  if (document.documentElement.classList.contains('adobe-ue-edit')) {
+    console.log('ui-edit already fired');
+    ueEditModeHandler();
+  } else {
+    document.body.addEventListener('aue:ui-edit', () => {
+      console.log('ui-edit event fired');
+      ueEditModeHandler();
+    });
+  }
 }
 
 const observer = new MutationObserver(instrumentForms);
