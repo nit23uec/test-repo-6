@@ -207,13 +207,10 @@ async function renderFormBlock(form, editMode) {
 }
 
 async function annotateFormsForEditing(forms) {
-  console.log(`window.currentMode: ${window.currentMode}`);
   if (typeof window.currentMode !== 'undefined' && window.currentMode === 'preview') return;
   forms.forEach(async (form) => {
-    console.log('annotating forms: renderFormBlock');
     const { formEl, formDef } = (await renderFormBlock(form, true)) || {};
     if (formEl && formDef) {
-      console.log('annotating form: just before annotating', formEl);
       annotateFormForEditing(formEl, formDef);
     }
   });
@@ -232,9 +229,6 @@ async function instrumentForms(mutationsList) {
       });
     }
   });
-  if(formsEl.length > 0) {
-    console.log('annotating forms from Mutation observer');
-  }
   annotateFormsForEditing(formsEl);
 }
 
@@ -335,13 +329,9 @@ function attachEventListners(main) {
   }
 
   if (document.documentElement.classList.contains('adobe-ue-edit')) {
-    console.log('ui-edit already fired');
     ueEditModeHandler();
   } else {
-    document.body.addEventListener('aue:ui-edit', () => {
-      console.log('ui-edit event fired');
-      ueEditModeHandler();
-    });
+    document.body.addEventListener('aue:ui-edit', ueEditModeHandler);
   }
 }
 
@@ -349,8 +339,3 @@ const observer = new MutationObserver(instrumentForms);
 observer.observe(document, { childList: true, subtree: true, attributeFilter: ['form'] });
 loadCSS(`${window.hlx.codeBasePath}/scripts/form-editor-support.css`);
 attachEventListners(document.querySelector('main'));
-const forms = document.querySelectorAll('form');
-if (forms.length > 0) {
-  console.log('annotating forms on load');
-}
-annotateFormsForEditing(forms);
