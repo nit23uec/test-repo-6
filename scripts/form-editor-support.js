@@ -329,6 +329,7 @@ function attachEventListners(main) {
   });
 
   document.body.addEventListener('aue:ui-edit', () => {
+    console.log('ui-edit event fired');
     window.currentMode = 'edit';
     const forms = document.querySelectorAll('form');
     annotateFormsForEditing(forms);
